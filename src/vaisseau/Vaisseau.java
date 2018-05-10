@@ -63,29 +63,44 @@ public class Vaisseau {
     }
 
     public void go(CentreDeTri centreDeTri){
-        vider(centreDeTri);
-        centreDeTri.getVaissoLine().add(this);
-        centreDeTri.recycler();
+        try {
+            vider(centreDeTri);
+            centreDeTri.getVaissoLine().add(this);
+            centreDeTri.recycler();
+            if (centreDeTri.getVaissoLine().size()==centreDeTri.getMaxVaisQueue()){
+                centreDeTri.getVaissoLine().peek().remplir(Main.getRandomPlanet());
+                centreDeTri.getVaissoLine().poll().go(Main.tabCentre[0]);
+            }
+        }catch (Exception ez){
+            System.out.println("Simon est bo");
+            Main.fini=true;
+        }
     }
     public void vider(CentreDeTri centreDeTri){
-        for (int i=0;i<contenu.size();i++){
-            if (contenu.get(i).getMasseVol()==2){
-                centreDeTri.getStackPlut().add(new Plutonium(Main.pourcPlut));
-            }
-            else if (contenu.get(i).getMasseVol()==3){
-                centreDeTri.getStackThul().add(new Thulium(Main.pourcThul));
-            }
-            else if (contenu.get(i).getMasseVol()==4){
-                centreDeTri.getStackGad().add(new Gadolinium(Main.pourcGad));
-            }
-            else if (contenu.get(i).getMasseVol()==5){
-                centreDeTri.getStackTerb().add(new Terbium(Main.pourcTerb));
-            }
-            else {
-                centreDeTri.getStackNep().add(new Neptunium(Main.pourcNep));
-            }
+        try {
+            for (int i=0;i<contenu.size();i++){
+                if (contenu.get(i).getMasseVol()==2){
+                    centreDeTri.getStackPlut().add(new Plutonium(Main.pourcPlut));
+                }
+                else if (contenu.get(i).getMasseVol()==3){
+                    centreDeTri.getStackThul().add(new Thulium(Main.pourcThul));
+                }
+                else if (contenu.get(i).getMasseVol()==4){
+                    centreDeTri.getStackGad().add(new Gadolinium(Main.pourcGad));
+                }
+                else if (contenu.get(i).getMasseVol()==5){
+                    centreDeTri.getStackTerb().add(new Terbium(Main.pourcTerb));
+                }
+                else {
+                    centreDeTri.getStackNep().add(new Neptunium(Main.pourcNep));
+                }
 
+            }
+            contenu.clear();
+        }catch (Exception ex){
+            System.out.println("Méthode VIDER");
+            Main.fini=true;
         }
-        contenu.clear();
+
     }
 }

@@ -9,9 +9,15 @@ import vaisseau.Lourd;
 import vaisseau.Normal;
 import vaisseau.Vaisseau;
 
+import java.io.*;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class Main {
+
+
     public static int nbVLight=definir();
     public static int nbVNorm=definir2();
     public static int nbVLourd=definir3();
@@ -27,6 +33,19 @@ public class Main {
     public static CentreDeTri tabCentre[]=new CentreDeTri[nbCentreTri];
 
     public static void main(String[] args) {
+        try {
+            Socket socket = new Socket("127.0.0.1", 8080);
+            OutputStream fluxSortant = socket.getOutputStream();
+            OutputStreamWriter sortie = new OutputStreamWriter(fluxSortant);
+            sortie.write("Bonjour, j’aimerais me connecter!\n");
+            sortie.flush();
+            InputStream fluxEntrant = socket.getInputStream();
+            BufferedReader entree = new BufferedReader(new InputStreamReader(fluxEntrant));
+            String message = entree.readLine();
+
+        }catch (Exception ex){
+        System.out.println("SOCKET");
+        }
 
         //Creer vaisseau
         Vaisseau[] tabVais=new Vaisseau[nbVLight+nbVNorm+nbVLourd];
@@ -44,7 +63,7 @@ public class Main {
         System.out.println("Your "+tabVais.length+" Vaisseau are successfully created");
         //Creer centre tri
         for (int i=0;i<tabCentre.length;i++){
-            tabCentre[i]=new CentreDeTri(nbMaxDechet,nbMaxVaiss);
+            tabCentre[i]=new CentreDeTri(nbMaxDechet,nbMaxVaiss,i);
         }
         System.out.println("Your "+tabCentre.length+" Tri Center are successfully created"+System.lineSeparator());
 
@@ -69,6 +88,7 @@ public class Main {
                 }catch (Exception ex){
                     System.out.println("probleme methode go");
                     System.out.println("---------------------------------------------------------------------------------------");
+                    Main.fini=true;
                 }
 
             }
@@ -86,6 +106,14 @@ public class Main {
             System.out.println("Terbium    : "+tabCentre[j].getStackTerb().size());
             System.out.println("Neptunium  : "+tabCentre[j].getStackNep().size());
         }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        try {
+            PrintWriter sortie = new PrintWriter(new BufferedWriter(new FileWriter(timeStamp+".xml")));
+            sortie.println("World");
+        }catch (Exception ex){
+            System.out.println("créer dans un fichier qui n'existe pas.");
+        }
+
 
 
 
