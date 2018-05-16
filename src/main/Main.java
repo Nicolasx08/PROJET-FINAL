@@ -33,20 +33,6 @@ public class Main {
     public static CentreDeTri tabCentre[]=new CentreDeTri[nbCentreTri];
 
     public static void main(String[] args) {
-        try {
-            Socket socket = new Socket("127.0.0.1", 8080);
-            OutputStream fluxSortant = socket.getOutputStream();
-            OutputStreamWriter sortie = new OutputStreamWriter(fluxSortant);
-            sortie.write("Bonjour, j’aimerais me connecter!\n");
-            sortie.flush();
-            InputStream fluxEntrant = socket.getInputStream();
-            BufferedReader entree = new BufferedReader(new InputStreamReader(fluxEntrant));
-            String message = entree.readLine();
-
-        }catch (Exception ex){
-        System.out.println("SOCKET");
-        }
-
         //Creer vaisseau
         Vaisseau[] tabVais=new Vaisseau[nbVLight+nbVNorm+nbVLourd];
         for (int i=0;i<tabVais.length;i++){
@@ -105,6 +91,7 @@ public class Main {
             System.out.println("Gadolinium : "+tabCentre[j].getStackGad().size());
             System.out.println("Terbium    : "+tabCentre[j].getStackTerb().size());
             System.out.println("Neptunium  : "+tabCentre[j].getStackNep().size());
+            envoyerInfo();
         }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         try {
@@ -211,7 +198,28 @@ public class Main {
         return nbMaxVais;
     }
 
+    public static void envoyerInfo(){
+        try {
+            Socket socket = new Socket("127.0.0.1", 8080);
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
+            OutputStream fluxSortant = socket.getOutputStream();
+            OutputStreamWriter sortie = new OutputStreamWriter(fluxSortant);
+            sortie.write(tabCentre.length);
+            for(int i=0;i<tabCentre.length;i++) {
+                sortie.write(tabCentre[i].getVaissoLine().size());
+                sortie.write(tabCentre[i].getStackPlut().size());
+                sortie.write(tabCentre[i].getStackGad().size());
+                sortie.write(tabCentre[i].getStackNep().size());
+                sortie.write(tabCentre[i].getStackTerb().size());
+                sortie.write(tabCentre[i].getStackThul().size());
+            }
+            sortie.close();
+        } catch(Exception ex){
+            System.out.println("Le socket ne fonctionne pas : "+ex);
+        }
+    }
+    public static void reprendreInfo(){
 
-
+    }
 }
