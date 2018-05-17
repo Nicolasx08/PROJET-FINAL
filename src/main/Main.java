@@ -201,8 +201,6 @@ public class Main {
     public static void envoyerInfo(){
         try {
             Socket socket = new Socket("127.0.0.1", 8080);
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-
             OutputStream fluxSortant = socket.getOutputStream();
             OutputStreamWriter sortie = new OutputStreamWriter(fluxSortant);
             sortie.write(tabCentre.length);

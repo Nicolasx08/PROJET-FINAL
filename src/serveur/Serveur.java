@@ -1,8 +1,12 @@
 package serveur;
 
-public class Serveur {
+
     import java.io.File;
-import javax.xml.parsers.DocumentBuilder;
+    import java.io.FileReader;
+    import java.io.FileWriter;
+    import java.net.ServerSocket;
+    import java.net.Socket;
+    import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -11,74 +15,52 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+    import main.Main;
+    import org.w3c.dom.*;
+    import planete.*;
 
-    public class WriteXMLFile {
+public class Serveur {
+    public static void main(String[] args) {
 
-        public static void main(String argv[]) {
+        try {
+            ServerSocket serveur = new ServerSocket(8080);
 
-            try {
+            Socket socket = serveur.accept();
 
-                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-                // root elements
-                Document doc = docBuilder.newDocument();
-                Element rootElement = doc.createElement("company");
-                doc.appendChild(rootElement);
+        } catch (Exception ex) {
+            System.out.println("Serveur marche pas " + ex);
+        }
+    }
+    public static void clean(Node node) {
+        NodeList childNodes = node.getChildNodes();
+        for (int n = childNodes.getLength() - 1; n >= 0; n--)
+        {
+            Node child = childNodes.item(n);
+            int nodeType = child.getNodeType();
 
-                // staff elements
-                Element staff = doc.createElement("Staff");
-                rootElement.appendChild(staff);
-
-                // set attribute to staff element
-                Attr attr = doc.createAttribute("id");
-                attr.setValue("1");
-                staff.setAttributeNode(attr);
-
-                // shorten way
-                // staff.setAttribute("id", "1");
-
-                // firstname elements
-                Element firstname = doc.createElement("firstname");
-                firstname.appendChild(doc.createTextNode("yong"));
-                staff.appendChild(firstname);
-
-                // lastname elements
-                Element lastname = doc.createElement("lastname");
-                lastname.appendChild(doc.createTextNode("mook kim"));
-                staff.appendChild(lastname);
-
-                // nickname elements
-                Element nickname = doc.createElement("nickname");
-                nickname.appendChild(doc.createTextNode("mkyong"));
-                staff.appendChild(nickname);
-
-                // salary elements
-                Element salary = doc.createElement("salary");
-                salary.appendChild(doc.createTextNode("100000"));
-                staff.appendChild(salary);
-
-                // write the content into xml file
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(new File("C:\\file.xml"));
-
-                // Output to console for testing
-                // StreamResult result = new StreamResult(System.out);
-
-                transformer.transform(source, result);
-
-                System.out.println("File saved!");
-
-            } catch (ParserConfigurationException pce) {
-                pce.printStackTrace();
-            } catch (TransformerException tfe) {
-                tfe.printStackTrace();
+            if (nodeType == Node.ELEMENT_NODE)
+                clean(child);
+            else if (nodeType == Node.TEXT_NODE){
+                String trimmedNodeValue = child.getNodeValue().trim();
+                if (trimmedNodeValue.length() == 0)
+                    node.removeChild(child);
+                else
+                    child.setNodeValue(trimmedNodeValue);
             }
+            else if (nodeType == Node.COMMENT_NODE)
+                node.removeChild(child);
+        }
+    }
+    public static void chercherInfo(){
+        try {
+            File file = new File("Donnees.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+        }catch (Exception e){
+            System.out.println("Chercher info marche pas");
         }
     }
 }
+

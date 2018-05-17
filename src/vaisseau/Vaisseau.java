@@ -11,6 +11,7 @@ public class Vaisseau {
     private String type;
     private int capacite;
     private ArrayList<Materiaux> contenu=new ArrayList<>();
+    protected int centreActuel=0;
 
     public String getType() {
         return type;
@@ -34,6 +35,14 @@ public class Vaisseau {
 
     public void setContenu(ArrayList<Materiaux> contenu) {
         this.contenu = contenu;
+    }
+
+    public int getCentreActuel() {
+        return centreActuel;
+    }
+
+    public void setCentreActuel(int centreActuel) {
+        this.centreActuel = centreActuel;
     }
 
     public void remplir(Planet planete){

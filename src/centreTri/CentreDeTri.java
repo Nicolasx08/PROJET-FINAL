@@ -88,7 +88,7 @@ public class CentreDeTri {
     public void setStackNep(Stack<Materiaux> stackNep) {
         this.stackNep = stackNep;
     }
-//JSUIS RENDU LA
+
     public void recycler() {
         try {
             if (stackPlut.size() > qMax) {
@@ -97,7 +97,6 @@ public class CentreDeTri {
                     stackPlut.pop();
                     if (i == vaissoLine.peek().getCapacite()) {
                         vaissoLine.poll().go(Main.tabCentre[this.position + 1]);
-
                     }
                 }
                 vaissoLine.poll().go(Main.tabCentre[this.position + 1]);
